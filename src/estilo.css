@@ -397,6 +397,61 @@ body {
 }
 
 /* ============================================================
+   Pistas
+   ============================================================ */
+.pistas {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pistas:empty {
+  display: none;
+}
+
+.pista {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0;
+  padding: 10px 14px;
+  border: 1px solid rgba(192, 132, 252, 0.4);
+  border-left: 3px solid var(--neon-2);
+  border-radius: 10px;
+  background: rgba(109, 40, 217, 0.12);
+  color: var(--texto);
+  font-size: 16px;
+  line-height: 1.4;
+  animation: aparecer-pista 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes aparecer-pista {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pista-num {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: var(--neon-2);
+  color: #1a0630;
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: 0 0 12px rgba(192, 132, 252, 0.6);
+}
+
+/* ============================================================
    Marco HUD con esquinas
    ============================================================ */
 .marco {
@@ -669,7 +724,9 @@ body {
    ============================================================ */
 .acciones {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
+  gap: 10px;
 }
 
 .boton {
@@ -733,6 +790,24 @@ body {
   border-color: rgba(56, 189, 248, 0.4);
   color: var(--texto);
   box-shadow: inset 0 0 14px rgba(56, 189, 248, 0.1);
+}
+
+.boton-pista {
+  border-color: var(--neon-2);
+  background: linear-gradient(135deg, rgba(109, 40, 217, 0.92), rgba(76, 29, 149, 0.92));
+  box-shadow: 0 0 20px rgba(192, 132, 252, 0.4),
+    inset 0 0 14px rgba(192, 132, 252, 0.2);
+}
+
+.boton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  filter: grayscale(0.4);
+}
+
+.boton:disabled .boton-brillo {
+  animation: none;
 }
 
 /* ============================================================

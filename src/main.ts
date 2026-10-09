@@ -8,6 +8,7 @@ import {
   elegirPalabraSecreta,
   crearJuego,
   enviarIntento,
+  pedirPista,
   generarCuadroCompartir,
 } from './logica.ts';
 import type { EstadoJuego, ResultadoLetra } from './logica.ts';
@@ -50,6 +51,8 @@ contenedor.innerHTML = `
 
     <p class="mensaje" id="mensaje" role="status" aria-live="polite"></p>
 
+    <div class="pistas" id="pistas" aria-live="polite"></div>
+
     <div class="marco">
       <span class="esquina esquina-1"></span>
       <span class="esquina esquina-2"></span>
@@ -61,6 +64,9 @@ contenedor.innerHTML = `
     <div class="teclado" id="teclado" aria-label="Teclado en pantalla"></div>
 
     <div class="acciones">
+      <button type="button" class="boton boton-pista" id="pista">
+        <span class="boton-brillo"></span>Pista
+      </button>
       <button type="button" class="boton" id="nueva">
         <span class="boton-brillo"></span>Nueva partida
       </button>
@@ -82,7 +88,9 @@ const teclado = document.querySelector<HTMLDivElement>('#teclado')!;
 const mensaje = document.querySelector<HTMLParagraphElement>('#mensaje')!;
 const progreso = document.querySelector<HTMLSpanElement>('#progreso')!;
 const diaNumero = document.querySelector<HTMLSpanElement>('#dia')!;
+const pistas = document.querySelector<HTMLDivElement>('#pistas')!;
 const resultado = document.querySelector<HTMLElement>('#resultado')!;
+const botonPista = document.querySelector<HTMLButtonElement>('#pista')!;
 const botonNueva = document.querySelector<HTMLButtonElement>('#nueva')!;
 
 // ============================================================
@@ -285,6 +293,24 @@ function renderEstado(): void {
   juego.classList.toggle('estado-perdido', estado.estado === 'perdido');
 }
 
+function renderPista(): void {
+  pistas.innerHTML = '';
+  estado.pistas.forEach((texto, indice) => {
+    const item = document.createElement('p');
+    item.className = 'pista';
+    const numero = document.createElement('span');
+    numero.className = 'pista-num';
+    numero.textContent = String(indice + 1);
+    item.appendChild(numero);
+    item.appendChild(document.createTextNode(texto));
+    pistas.appendChild(item);
+  });
+
+  const agotadas =
+    estado.pistasUsadas >= CONFIG.MAX_PISTAS || estado.estado !== 'jugando';
+  botonPista.disabled = agotadas;
+}
+
 function renderResultado(): void {
   if (estado.estado === 'jugando') {
     resultado.hidden = true;
@@ -328,6 +354,7 @@ function render(): void {
   renderMensaje();
   renderProgreso();
   renderEstado();
+  renderPista();
   renderResultado();
 }
 
@@ -347,6 +374,12 @@ function comenzarPartida(semilla: number): void {
 construirTablero();
 construirTeclado();
 diaNumero.textContent = `#${numeroDelDia()}`;
+
+botonPista.addEventListener('click', () => {
+  if (pedirPista(estado)) {
+    render();
+  }
+});
 
 botonNueva.addEventListener('click', () => {
   comenzarPartida(Math.floor(Math.random() * 1000000));

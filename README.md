@@ -10,7 +10,8 @@
 
 1. Escribí una palabra de cinco letras, con el teclado en pantalla o con el teclado físico.
 2. Presioná **ENTER**. Verde = letra en su lugar, amarillo = letra presente en otra posición, gris = letra que no está.
-3. Si acertás antes de seis intentos, ganás; si se agotan, la partida se pierde y te muestra la palabra. Después podés **copiar el cuadrito de emojis** para compartir el resultado sin revelar la palabra.
+3. Si te trabás, presioná **PISTA**: la primera te da una descripción de la palabra y la segunda te revela su letra inicial. Hay dos pistas por partida.
+4. Si acertás antes de seis intentos, ganás; si se agotan, la partida se pierde y te muestra la palabra. Después podés **copiar el cuadrito de emojis** para compartir el resultado sin revelar la palabra.
 
 ## 3. Enlace para abrirlo
 

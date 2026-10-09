@@ -7,8 +7,10 @@ import {
   crearJuego,
   evaluarIntento,
   enviarIntento,
+  pedirPista,
   reiniciarJuego,
   generarCuadroCompartir,
+  PISTAS,
 } from '../src/logica.ts';
 import type { EstadoJuego } from '../src/logica.ts';
 
@@ -217,5 +219,76 @@ describe('Reiniciar y compartir', () => {
     expect(lineas[0]).toContain('Palabra del Día #1');
     expect(lineas).toHaveLength(estado.intentos.length + 1);
     expect(lineas[2]).toHaveLength(CONFIG.LARGO_PALABRA * 2);
+  });
+});
+
+describe('Las pistas ayudan sin romper el juego', () => {
+  it('todas las palabras del diccionario tienen una descripción', () => {
+    for (const palabra of DICCIONARIO) {
+      expect(PISTAS[palabra], `Falta la pista de ${palabra}`).toBeTruthy();
+      expect(PISTAS[palabra].length).toBeGreaterThan(0);
+    }
+  });
+
+  it('una partida nueva empieza sin pistas reveladas', () => {
+    const estado = juegoDePrueba();
+
+    expect(estado.pistas).toEqual([]);
+    expect(estado.pistasUsadas).toBe(0);
+  });
+
+  it('la primera pista describe la palabra y devuelve true', () => {
+    const estado = juegoDePrueba('PERRO');
+
+    const pudo = pedirPista(estado);
+
+    expect(pudo).toBe(true);
+    expect(estado.pistas).toHaveLength(1);
+    expect(estado.pistas[0]).toBe(PISTAS.PERRO);
+    expect(estado.pistasUsadas).toBe(1);
+  });
+
+  it('la segunda pista revela la letra inicial', () => {
+    const estado = juegoDePrueba('PERRO');
+    pedirPista(estado);
+
+    const pudo = pedirPista(estado);
+
+    expect(pudo).toBe(true);
+    expect(estado.pistas).toHaveLength(2);
+    expect(estado.pistas[1]).toContain('P');
+    expect(estado.pistasUsadas).toBe(2);
+  });
+
+  it('no se pueden pedir más pistas que el máximo', () => {
+    const estado = juegoDePrueba();
+    for (let i = 0; i < CONFIG.MAX_PISTAS; i += 1) {
+      expect(pedirPista(estado)).toBe(true);
+    }
+
+    const pudo = pedirPista(estado);
+
+    expect(pudo).toBe(false);
+    expect(estado.pistas).toHaveLength(CONFIG.MAX_PISTAS);
+  });
+
+  it('cuando la partida termina ya no se pueden pedir pistas', () => {
+    const estado = juegoDePrueba('PERRO');
+    enviarIntento(estado, 'PERRO');
+
+    const pudo = pedirPista(estado);
+
+    expect(pudo).toBe(false);
+    expect(estado.pistas).toEqual([]);
+  });
+
+  it('reiniciar una partida borra las pistas usadas', () => {
+    const estado = juegoDePrueba('PERRO');
+    pedirPista(estado);
+
+    reiniciarJuego(estado, 'DANZA');
+
+    expect(estado.pistas).toEqual([]);
+    expect(estado.pistasUsadas).toBe(0);
   });
 });
