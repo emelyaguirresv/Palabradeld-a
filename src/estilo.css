@@ -879,3 +879,22 @@ body {
     transition-duration: 0.001ms !important;
   }
 }
+
+/* ============================================================
+   Refuerzos para el celular · funciona con el dedo
+   ============================================================ */
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  overscroll-behavior-y: contain;
+}
+
+/* Sin destello azul al tocar y sin zoom por doble toque */
+.tecla,
+.boton,
+.celda {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
